@@ -1,33 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	"backend/db/models"
 )
 
 // ======================================================================
 // In-memory data
 // ======================================================================
 
-type Task struct {
-	ID     string  `json:"id"`
-	Title  string  `json:"title"`
-	Points float64 `json:"points"`
-}
-
 // Maybe?
-type Action struct {
-	ID     string  `json:"id"`
-	TaskID string  `json:"taskId"`
-	Points float64 `json:"points"`
-}
-
 // albums slice to seed record album data.
-var tasks = []Task{
-	{ID: "1", Title: "Wake up on time", Points: 10},
-	{ID: "2", Title: "Study", Points: 25},
-	{ID: "3", Title: "Exercise", Points: 25},
+var tasks = []models.Task{
+	{Title: "Wake up on time", Points: 10},
+	{Title: "Study", Points: 25},
+	{Title: "Exercise", Points: 25},
 }
 
 // ======================================================================
@@ -42,7 +34,12 @@ func getTaskByID(c *gin.Context) {
 	id := c.Param("id")
 
 	for _, t := range tasks {
-		if t.ID == id {
+		id_u64, err := strconv.ParseUint(id, 10, 32)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		if t.ID == uint(id_u64) {
 			c.IndentedJSON(http.StatusOK, t)
 			return
 		}
@@ -51,7 +48,7 @@ func getTaskByID(c *gin.Context) {
 }
 
 func postTask(c *gin.Context) {
-	var newTask Task
+	var newTask models.Task
 
 	if err := c.BindJSON(&newTask); err != nil {
 		return

@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"backend/db/models"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +26,7 @@ func TestGetTask(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/tasks/1", nil)
+	req, _ := http.NewRequest("GET", "/tasks/0", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -34,8 +36,7 @@ func TestPostTask(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	reqBody, _ := json.Marshal(Task{
-		ID:     "4",
+	reqBody, _ := json.Marshal(models.Task{
 		Title:  "Test",
 		Points: 10,
 	})

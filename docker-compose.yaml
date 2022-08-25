@@ -4,3 +4,13 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
+  db:
+    # https://hub.docker.com/_/postgres
+    image: postgres:14.5
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: test_user
+      POSTGRES_DB: test_db
+    ports:
+      - "5500:5432"
