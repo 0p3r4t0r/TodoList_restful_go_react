@@ -8,6 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"backend/db/models"
+
+	docs "backend/docs"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // ======================================================================
@@ -26,6 +31,13 @@ var tasks = []models.Task{
 // Endpoints
 // ======================================================================
 
+// getTasks godoc
+// @Summary Get all tasks
+// @Description get all tasks
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Task
+// @Router /tasks [get]
 func getTasks(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, tasks)
 }
@@ -61,17 +73,39 @@ func postTask(c *gin.Context) {
 // ======================================================================
 // Main
 // ======================================================================
-
 func setupRouter() *gin.Engine {
 	router := gin.Default()
+	docs.SwaggerInfo.BasePath = "api/v1"
 
-	router.GET("/tasks", getTasks)
-	router.GET("/tasks/:id", getTaskByID)
-	router.POST("/tasks", postTask)
+	v1 := router.Group("/api/v1")
+
+	{ // Tasks
+		tasks := v1.Group("/tasks")
+		{
+			tasks.GET("", getTasks)
+			tasks.GET(":id", getTaskByID)
+			tasks.POST("", postTask)
+		}
+	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	return router
 }
 
+// @title ToDo List API
+// @version 1.0
+// @description This is a sample project to learn API development in Golang.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name 0p3r4t0r
+// @contact.url https://github.com/0p3r4t0r
+
+// @license.name MIT License
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
 	router := setupRouter()
 

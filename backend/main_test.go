@@ -16,7 +16,7 @@ func TestGetTasks(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/tasks", nil)
+	req, _ := http.NewRequest("GET", "/api/v1/tasks", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -26,7 +26,7 @@ func TestGetTask(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/tasks/0", nil)
+	req, _ := http.NewRequest("GET", "/api/v1/tasks/0", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -40,7 +40,7 @@ func TestPostTask(t *testing.T) {
 		Title:  "Test",
 		Points: 10,
 	})
-	req, _ := http.NewRequest("POST", "/tasks", bytes.NewBuffer(reqBody))
+	req, _ := http.NewRequest("POST", "/api/v1/tasks", bytes.NewBuffer(reqBody))
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 201, w.Code)
