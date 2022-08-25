@@ -1,4 +1,4 @@
-FROM golang
+FROM golang:1.19.0
 
 ENV GIN_MODE=release
 ENV PORT=8080
