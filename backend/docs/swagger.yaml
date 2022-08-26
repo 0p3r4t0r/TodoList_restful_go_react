@@ -23,7 +23,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-host: localhost:8080
+host: localhost:8080/
 info:
   contact:
     name: 0p3r4t0r
