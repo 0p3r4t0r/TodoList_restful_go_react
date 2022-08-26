@@ -9,6 +9,7 @@
   ```
 
 * https://github.com/swaggo/gin-swagger
+* https://github.com/gin-contrib/cors
 
 ### Interesting Alternatives
 * https://github.com/emicklei/go-restful
