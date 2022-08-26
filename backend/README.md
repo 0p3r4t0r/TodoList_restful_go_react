@@ -2,13 +2,27 @@
 
 * https://github.com/gin-gonic/gin
 * https://github.com/go-gorm/gorm
-* https://github.com/go-gormigrate/gormigrate
+* https://github.com/swaggo/swag
+
+```
+  swag init --parseDependency --parseInternal
+  ```
+
+* https://github.com/swaggo/gin-swagger
+
+### Interesting Alternatives
+* https://github.com/emicklei/go-restful
+* https://github.com/go-gormigrate/gormigrate 
 
 ## GO Resources
 
 * https://go.dev/doc/tutorial/web-service-gin
 * https://quii.gitbook.io/learn-go-with-tests/
 * https://gobyexample.com/
+
+## Issues
+
+* Saggo: Generate using Gorm types: https://github.com/swaggo/swag/issues/810
 
 ## Docker Commands
 
