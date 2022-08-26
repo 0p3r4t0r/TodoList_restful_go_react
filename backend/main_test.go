@@ -26,7 +26,7 @@ func TestGetTask(t *testing.T) {
 	router := setupRouter()
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/v1/tasks/0", nil)
+	req, _ := http.NewRequest("GET", "/api/v1/tasks/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
