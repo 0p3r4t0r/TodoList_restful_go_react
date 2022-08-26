@@ -1,21 +1,38 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
+import { useGetTasks } from "./api";
+
+axios.defaults.baseURL = "http://127.0.0.1:8080/api/v1";
+
+function Tasks() {
+  const { data: getTasksResponse } = useGetTasks();
+
+  useEffect(() => {
+    if (getTasksResponse) {
+      console.log(getTasksResponse.data);
+    }
+  }, [getTasksResponse]);
+
+  return (
+    <div>
+      <ul>
+        {getTasksResponse &&
+          getTasksResponse.data.map((task) => (
+            <li>{`${task.title}: ${task.points}`}</li>
+          ))}
+      </ul>
+    </div>
+  );
+}
 
 function App() {
-  const getTasks = async () => {
-    axios({
-      method: "GET",
-      url: "api/v1/tasks",
-      baseURL: "http://127.0.0.1:8080",
-    })
-      .then((res) => console.log(res.data))
-      .catch((e) => console.warn(e));
-  };
+  const queryClient = new QueryClient();
   return (
-    <div className="App">
-      <button onClick={() => getTasks()}>Test</button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <Tasks />
+    </QueryClientProvider>
   );
 }
 
