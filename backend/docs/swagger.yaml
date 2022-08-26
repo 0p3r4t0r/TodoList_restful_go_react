@@ -8,6 +8,13 @@ definitions:
         description: Valid is true if Time is not NULL
         type: boolean
     type: object
+  models.CreateTaskDTO:
+    properties:
+      points:
+        type: number
+      title:
+        type: string
+    type: object
   models.Task:
     properties:
       createdAt:
@@ -40,7 +47,48 @@ paths:
     get:
       consumes:
       - application/json
-      description: get all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+      summary: Get all tasks
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: New Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTaskDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Task'
+      summary: Create a new task
+      tags:
+      - tasks
+  /tasks/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -48,5 +96,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Task'
-      summary: Get all tasks
+      summary: Get task by ID
+      tags:
+      - tasks
 swagger: "2.0"

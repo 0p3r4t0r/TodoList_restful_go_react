@@ -12,15 +12,23 @@ import (
 
 // Get godoc
 // @Summary Get all tasks
-// @Description get all tasks
-// @Accept  json
-// @Produce  json
-// @Success 200 {object} models.Task
-// @Router /tasks [get]
+// @Tags		tasks
+// @Accept  	json
+// @Produce  	json
+// @Success 	200 {array}		models.Task
+// @Router 		/tasks [get]
 func Get(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, data.Tasks)
 }
 
+// GetByID godoc
+// @Summary		Get task by ID
+// @Tags		tasks
+// @Param  		id 	path 		int true "Task ID"
+// @Accept  	json
+// @Produce  	json
+// @Success 	200 {object} 	models.Task
+// @Router 		/tasks/{id} 	[get]
 func GetByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -38,6 +46,14 @@ func GetByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 }
 
+// Post godoc
+// @Summary 	Create a new task
+// @Tags		tasks
+// @Param  		task	body models.CreateTaskDTO true "New Task"
+// @Accept  	json
+// @Produce  	json
+// @Success 	201 {object} models.Task
+// @Router 		/tasks [post]
 func Post(c *gin.Context) {
 	var newTask models.Task
 
