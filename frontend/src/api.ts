@@ -5,17 +5,24 @@
  * This is a sample project to learn API development in Golang.
  * OpenAPI spec version: 1.0
  */
-import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import axios from 'axios'
+import type {
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError
+} from 'axios'
+import {
+  useQuery,
+  useMutation
+} from '@tanstack/react-query'
 import type {
   UseQueryOptions,
   UseMutationOptions,
   QueryFunction,
   MutationFunction,
   UseQueryResult,
-  QueryKey,
-} from "@tanstack/react-query";
+  QueryKey
+} from '@tanstack/react-query'
 export interface ModelsTask {
   createdAt?: string;
   deletedAt?: GormDeletedAt;
@@ -36,141 +43,120 @@ export interface GormDeletedAt {
   valid?: boolean;
 }
 
+
+
+
 /**
  * @summary Get all tasks
  */
 export const getTasks = (
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ModelsTask[]>> => {
-  return axios.get(`/tasks`, options);
-};
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ModelsTask[]>> => {
+    return axios.get(
+      `/tasks`,options
+    );
+  }
+
 
 export const getGetTasksQueryKey = () => [`/tasks`];
 
-export type GetTasksQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getTasks>>
->;
-export type GetTasksQueryError = AxiosError<unknown>;
+    
+export type GetTasksQueryResult = NonNullable<Awaited<ReturnType<typeof getTasks>>>
+export type GetTasksQueryError = AxiosError<unknown>
 
-export const useGetTasks = <
-  TData = Awaited<ReturnType<typeof getTasks>>,
-  TError = AxiosError<unknown>
->(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getTasks>>, TError, TData>;
-  axios?: AxiosRequestConfig;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+export const useGetTasks = <TData = Awaited<ReturnType<typeof getTasks>>, TError = AxiosError<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTasks>>, TError, TData>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTasksQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTasks>>> = ({
-    signal,
-  }) => getTasks({ signal, ...axiosOptions });
+  
 
-  const query = useQuery<Awaited<ReturnType<typeof getTasks>>, TError, TData>(
-    queryKey,
-    queryFn,
-    queryOptions
-  ) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTasks>>> = ({ signal }) => getTasks({ signal, ...axiosOptions });
+
+  const query = useQuery<Awaited<ReturnType<typeof getTasks>>, TError, TData>(queryKey, queryFn, queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryKey;
 
   return query;
-};
+}
+
 
 /**
  * @summary Create a new task
  */
 export const postTasks = (
-  modelsCreateTaskDTO: ModelsCreateTaskDTO,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ModelsTask>> => {
-  return axios.post(`/tasks`, modelsCreateTaskDTO, options);
-};
+    modelsCreateTaskDTO: ModelsCreateTaskDTO, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ModelsTask>> => {
+    return axios.post(
+      `/tasks`,
+      modelsCreateTaskDTO,options
+    );
+  }
 
-export type PostTasksMutationResult = NonNullable<
-  Awaited<ReturnType<typeof postTasks>>
->;
-export type PostTasksMutationBody = ModelsCreateTaskDTO;
-export type PostTasksMutationError = AxiosError<unknown>;
 
-export const usePostTasks = <
-  TError = AxiosError<unknown>,
-  TContext = unknown
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof postTasks>>,
-    TError,
-    { data: ModelsCreateTaskDTO },
-    TContext
-  >;
-  axios?: AxiosRequestConfig;
-}) => {
-  const { mutation: mutationOptions, axios: axiosOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof postTasks>>,
-    { data: ModelsCreateTaskDTO }
-  > = (props) => {
-    const { data } = props ?? {};
+    export type PostTasksMutationResult = NonNullable<Awaited<ReturnType<typeof postTasks>>>
+    export type PostTasksMutationBody = ModelsCreateTaskDTO
+    export type PostTasksMutationError = AxiosError<unknown>
 
-    return postTasks(data, axiosOptions);
-  };
+    export const usePostTasks = <TError = AxiosError<unknown>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postTasks>>, TError,{data: ModelsCreateTaskDTO}, TContext>, axios?: AxiosRequestConfig}
+) => {
+      const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
 
-  return useMutation<
-    Awaited<ReturnType<typeof postTasks>>,
-    TError,
-    { data: ModelsCreateTaskDTO },
-    TContext
-  >(mutationFn, mutationOptions);
-};
+      
 
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postTasks>>, {data: ModelsCreateTaskDTO}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postTasks(data,axiosOptions)
+        }
+
+      return useMutation<Awaited<ReturnType<typeof postTasks>>, TError, {data: ModelsCreateTaskDTO}, TContext>(mutationFn, mutationOptions)
+    }
+    
 /**
  * @summary Get task by ID
  */
 export const getTasksId = (
-  id: number,
-  options?: AxiosRequestConfig
-): Promise<AxiosResponse<ModelsTask>> => {
-  return axios.get(`/tasks/${id}`, options);
-};
-
-export const getGetTasksIdQueryKey = (id: number) => [`/tasks/${id}`];
-
-export type GetTasksIdQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getTasksId>>
->;
-export type GetTasksIdQueryError = AxiosError<unknown>;
-
-export const useGetTasksId = <
-  TData = Awaited<ReturnType<typeof getTasksId>>,
-  TError = AxiosError<unknown>
->(
-  id: number,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getTasksId>>,
-      TError,
-      TData
-    >;
-    axios?: AxiosRequestConfig;
+    id: number, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<ModelsTask>> => {
+    return axios.get(
+      `/tasks/${id}`,options
+    );
   }
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+
+
+export const getGetTasksIdQueryKey = (id: number,) => [`/tasks/${id}`];
+
+    
+export type GetTasksIdQueryResult = NonNullable<Awaited<ReturnType<typeof getTasksId>>>
+export type GetTasksIdQueryError = AxiosError<unknown>
+
+export const useGetTasksId = <TData = Awaited<ReturnType<typeof getTasksId>>, TError = AxiosError<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTasksId>>, TError, TData>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTasksIdQueryKey(id);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTasksId>>> = ({
-    signal,
-  }) => getTasksId(id, { signal, ...axiosOptions });
+  
 
-  const query = useQuery<Awaited<ReturnType<typeof getTasksId>>, TError, TData>(
-    queryKey,
-    queryFn,
-    { enabled: !!id, ...queryOptions }
-  ) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getTasksId>>> = ({ signal }) => getTasksId(id, { signal, ...axiosOptions });
+
+  const query = useQuery<Awaited<ReturnType<typeof getTasksId>>, TError, TData>(queryKey, queryFn, {enabled: !!(id), ...queryOptions}) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryKey;
 
   return query;
-};
+}
+
+
