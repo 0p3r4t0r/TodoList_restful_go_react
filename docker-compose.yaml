@@ -1,9 +1,7 @@
 version: '3'
+volumes:
+  todolist-restful-go-react-postgres-volume:
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "8080:8080"
   db:
     # https://hub.docker.com/_/postgres
     image: postgres:14.5
@@ -13,4 +11,14 @@ services:
       POSTGRES_USER: test_user
       POSTGRES_DB: test_db
     ports:
-      - "5500:5432"
+      - 5500:5432
+    expose:
+      - 5500
+    volumes:
+      - todolist-restful-go-react-postgres-volume:/var/lib/postgres
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

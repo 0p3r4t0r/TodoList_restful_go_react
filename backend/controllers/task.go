@@ -1,13 +1,13 @@
 package taskController
 
 import (
-	"backend/db/data"
+	"backend/db"
 	"backend/db/models"
-	"fmt"
+	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // Get godoc
@@ -18,7 +18,10 @@ import (
 // @Success 	200 {array}		models.Task
 // @Router 		/tasks [get]
 func Get(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, data.Tasks)
+	var tasks []models.Task
+	database, _ := db.Connect()
+	database.Find(&tasks)
+	c.IndentedJSON(http.StatusOK, tasks)
 }
 
 // GetByID godoc
@@ -32,18 +35,14 @@ func Get(c *gin.Context) {
 func GetByID(c *gin.Context) {
 	id := c.Param("id")
 
-	for _, t := range data.Tasks {
-		id_u64, err := strconv.ParseUint(id, 10, 32)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		if t.ID == uint(id_u64) {
-			c.IndentedJSON(http.StatusOK, t)
-			return
-		}
+	var task models.Task
+	database, _ := db.Connect()
+	result := database.First(&task, id)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "task not found"})
+		return
 	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
+	c.IndentedJSON(http.StatusOK, task)
 }
 
 // Post godoc
@@ -55,12 +54,14 @@ func GetByID(c *gin.Context) {
 // @Success 	201 {object} models.Task
 // @Router 		/tasks [post]
 func Post(c *gin.Context) {
-	var newTask models.Task
+	var task models.Task
 
-	if err := c.BindJSON(&newTask); err != nil {
+	if err := c.BindJSON(&task); err != nil {
 		return
 	}
 
-	data.Tasks = append(data.Tasks, newTask)
-	c.IndentedJSON(http.StatusCreated, newTask)
+	database, _ := db.Connect()
+	database.Select("Title", "Points").Create(&task)
+
+	c.IndentedJSON(http.StatusCreated, task)
 }
