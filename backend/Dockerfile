@@ -5,7 +5,7 @@ ENV PORT=8080
 
 WORKDIR /app
 
-COPY ./* ./
+COPY ./ ./
 RUN go get
 
 EXPOSE $PORT
