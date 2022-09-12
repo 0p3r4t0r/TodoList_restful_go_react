@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-	database, err := db.Connect()
+	database, err := db.ConnectLocal()
 	if err != nil {
-		fmt.Print("Could not connect to DB!")
+		fmt.Println("Could not connect to DB!")
 	}
 
 	m := gormigrate.New(database, gormigrate.DefaultOptions, []*gormigrate.Migration{
@@ -29,8 +29,8 @@ func main() {
 	})
 
 	if err = m.Migrate(); err != nil {
-		fmt.Print("Migration failed!")
+		fmt.Println("Migration failed!")
 	}
 
-	fmt.Print("Migration successful!")
+	fmt.Println("Migration successful!")
 }
